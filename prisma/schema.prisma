@@ -1,0 +1,35 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+// --- OUR INVENTORY MODELS ---
+
+model Product {
+  id             String   @id @default(uuid())
+  sku            String   @unique
+  name           String
+  price          Float
+  stock_quantity Int      @default(0)
+  createdAt      DateTime @default(now())
+  
+  // This defines the relationship: A product can have many orders
+  orders         Order[]
+}
+
+model Order {
+  id               String   @id @default(uuid())
+  quantity_ordered Int
+  status           String   @default("COMPLETED")
+  createdAt        DateTime @default(now())
+
+  // This links the order to a specific product
+  product          Product  @relation(fields: [productId], references: [id])
+  productId        String
+}
