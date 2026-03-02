@@ -30,6 +30,8 @@ jobs:
     # 4. Generate the Prisma Client so the backend can compile
     - name: Generate Prisma Client
       run: npx prisma generate
+      env:
+        DATABASE_URL: "file:./dev.db"
 
     # 5. Run a placeholder test command (in a real app, this runs your unit tests)
     - name: Run Tests
