@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventory Core Engine</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background-color: #f4f4f9; color: #333; margin: 0; padding: 20px; }
+        .container { max-width: 900px; margin: 0 auto; }
+        h1, h2 { color: #111; }
+        .card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); margin-bottom: 20px; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        input, button { width: 100%; padding: 10px; margin-top: 5px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+        button { background-color: #007bff; color: white; border: none; cursor: pointer; font-weight: bold; }
+        button:hover { background-color: #0056b3; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
+        .stock-badge { background: #e0f7fa; color: #006064; padding: 4px 8px; border-radius: 12px; font-size: 0.9em; font-weight: bold; }
+        .low-stock { background: #ffebee; color: #c62828; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>📦 Inventory Management Dashboard</h1>
+    
+    <div class="grid">
+        <div class="card">
+            <h2>Add New Product</h2>
+            <form id="productForm">
+                <label>Product Name</label>
+                <input type="text" id="name" required placeholder="e.g., Wireless Mouse">
+                
+                <label>SKU (Must be unique)</label>
+                <input type="text" id="sku" required placeholder="e.g., MOUSE-001">
+                
+                <label>Price ($)</label>
+                <input type="number" id="price" required step="0.01" placeholder="29.99">
+                
+                <label>Initial Stock</label>
+                <input type="number" id="stock" required placeholder="100">
+                
+                <button type="submit">Save Product</button>
+            </form>
+        </div>
+
+        <div class="card">
+            <h2>Simulate an Order</h2>
+            <form id="orderForm">
+                <label>Select Product</label>
+                <select id="orderProductId" style="width: 100%; padding: 10px; margin-top: 5px; margin-bottom: 15px;"></select>
+                
+                <label>Quantity to Order</label>
+                <input type="number" id="orderQuantity" required placeholder="1" min="1">
+                
+                <button type="submit" style="background-color: #28a745;">Place Order</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>Current Inventory</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>SKU</th>
+                    <th>Name</th>
+                    <th>Price</th>
+                    <th>Stock Level</th>
+                </tr>
+            </thead>
+            <tbody id="productTableBody">
+                </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    // 1. Fetch and Display Products
+    async function loadProducts() {
+        const response = await fetch('/api/products');
+        const products = await response.json();
+        
+        const tableBody = document.getElementById('productTableBody');
+        const productSelect = document.getElementById('orderProductId');
+        
+        tableBody.innerHTML = '';
+        productSelect.innerHTML = '<option value="">-- Choose a product --</option>';
+
+        products.forEach(product => {
+            // Update Table
+            const stockClass = product.stock_quantity < 10 ? 'low-stock' : '';
+            tableBody.innerHTML += `
+                <tr>
+                    <td>${product.sku}</td>
+                    <td>${product.name}</td>
+                    <td>$${product.price.toFixed(2)}</td>
+                    <td><span class="stock-badge ${stockClass}">${product.stock_quantity} in stock</span></td>
+                </tr>
+            `;
+
+            // Update Dropdown for Orders
+            productSelect.innerHTML += `<option value="${product.id}">${product.name} (Stock: ${product.stock_quantity})</option>`;
+        });
+    }
+
+    // 2. Handle Adding a Product
+    document.getElementById('productForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const newProduct = {
+            name: document.getElementById('name').value,
+            sku: document.getElementById('sku').value,
+            price: parseFloat(document.getElementById('price').value),
+            stock_quantity: parseInt(document.getElementById('stock').value)
+        };
+
+        const res = await fetch('/api/products', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(newProduct)
+        });
+
+        if (res.ok) {
+            alert('Product added successfully!');
+            e.target.reset();
+            loadProducts(); // Refresh the table
+        } else {
+            const error = await res.json();
+            alert('Error: ' + error.error);
+        }
+    });
+
+    // 3. Handle Placing an Order
+    document.getElementById('orderForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const orderData = {
+            productId: document.getElementById('orderProductId').value,
+            quantity_ordered: parseInt(document.getElementById('orderQuantity').value)
+        };
+
+        if (!orderData.productId) return alert('Please select a product.');
+
+        const res = await fetch('/api/orders', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(orderData)
+        });
+
+        if (res.ok) {
+            alert('Order placed successfully! Stock has been deducted.');
+            e.target.reset();
+            loadProducts(); // Refresh the table to show new stock level
+        } else {
+            const error = await res.json();
+            alert('Order Failed: ' + error.error);
+        }
+    });
+
+    // Load products when the page opens
+    loadProducts();
+</script>
+
+</body>
+</html>
