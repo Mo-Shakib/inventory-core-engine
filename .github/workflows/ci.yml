@@ -1,0 +1,36 @@
+name: Node.js CI
+
+# This triggers the pipeline every time someone pushes to the main branch
+# or opens a Pull Request against the main branch.
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    # 1. Grab the code from the repository
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    # 2. Install Node.js on the GitHub server
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '20.x'
+
+    # 3. Install dependencies (like Express and Prisma)
+    - name: Install dependencies
+      run: npm install
+
+    # 4. Generate the Prisma Client so the backend can compile
+    - name: Generate Prisma Client
+      run: npx prisma generate
+
+    # 5. Run a placeholder test command (in a real app, this runs your unit tests)
+    - name: Run Tests
+      run: echo "No tests written yet, but the app builds successfully!"
