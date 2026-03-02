@@ -19,14 +19,14 @@ A headless, robust backend service that manages product catalogs and tracks stoc
 1. **Clone the repository:**
    ```bash
    git clone https://github.com/Mo-Shakib/inventory-core-engine.git
-   cd inventory-core-engine```
+   cd inventory-core-engine
+   ```
 
 1. **Install dependencies:**
 
-
-```
+   ```
    npm install
-```
+   ```
 
 2. **Set up the Database:**
 
