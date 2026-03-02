@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Inventory Core Engine - Headless e-commerce inventory platform for products, stock, and order fulfillment."
+    />
+    <title>Inventory Core Engine</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Manrope:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="bg-glow bg-glow-left" aria-hidden="true"></div>
+    <div class="bg-glow bg-glow-right" aria-hidden="true"></div>
+
+    <header class="site-header">
+      <div class="container">
+        <a href="#" class="brand">Inventory Core Engine</a>
+        <nav class="nav-links">
+          <a href="#features">Features</a>
+          <a href="#modules">Modules</a>
+          <a href="#github">GitHub</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero container">
+        <p class="eyebrow">Headless E-Commerce Inventory Engine</p>
+        <h1>Real-time inventory orchestration for modern storefronts.</h1>
+        <p class="hero-copy">
+          Manage SKUs, stock levels, and order flows in one composable backend.
+          Built for integrations with any frontend storefront.
+        </p>
+        <div class="hero-cta">
+          <a class="btn btn-primary" id="github" href="https://github.com/Mo-Shakib/inventory-core-engine" target="_blank" rel="noreferrer">View Repository</a>
+          <a class="btn btn-secondary" href="#features">Explore Features</a>
+        </div>
+      </section>
+
+      <section class="stats container" aria-label="Project stats">
+        <article>
+          <p class="stat-value">99.9%</p>
+          <p class="stat-label">Inventory Accuracy</p>
+        </article>
+        <article>
+          <p class="stat-value">50k+</p>
+          <p class="stat-label">Orders / Day Scale</p>
+        </article>
+        <article>
+          <p class="stat-value">API-First</p>
+          <p class="stat-label">Headless Integration</p>
+        </article>
+      </section>
+
+      <section id="features" class="container section-grid">
+        <article class="card reveal">
+          <h2>Stock Intelligence</h2>
+          <p>Track item availability, buffer stock, and reservation windows in real time.</p>
+        </article>
+        <article class="card reveal">
+          <h2>Order Sync</h2>
+          <p>Automatically sync order state transitions from checkout to fulfillment.</p>
+        </article>
+        <article class="card reveal">
+          <h2>Channel Ready</h2>
+          <p>Connect marketplaces, mobile apps, and web storefronts through one API surface.</p>
+        </article>
+      </section>
+
+      <section id="modules" class="container modules reveal">
+        <h2>Core Engine Modules</h2>
+        <div class="module-list">
+          <span>Product Catalog Service</span>
+          <span>Inventory Ledger</span>
+          <span>Reservation Processor</span>
+          <span>Order Routing</span>
+          <span>Restock Alerts</span>
+          <span>Analytics Hooks</span>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer-content">
+        <p>Built for scalable commerce operations.</p>
+        <p><span id="year"></span> Inventory Core Engine</p>
+      </div>
+    </footer>
+
+    <script src="./script.js"></script>
+  </body>
+</html>
